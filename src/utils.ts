@@ -60,6 +60,8 @@ export function validStringInput(
   return trimmed;
 }
 
+//Helper Functions
+
 // Generate ID
 export function generateId(todos: TodoList): number {
   if (todos.length === 0) return 1;
@@ -67,11 +69,18 @@ export function generateId(todos: TodoList): number {
 }
 
 //Format Date
+export function formatDate(IsoString: string): string {
+  const date = new Date(IsoString);
 
-export function formatDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString('id-ID', {
+  if (isNaN(date.getTime())) {
+    return 'Tanggal tidak valid';
+  }
+
+  return date.toLocaleString('id-ID', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 }
