@@ -2,18 +2,22 @@
 // Hint: To-Do sebaiknya memiliki id, text, dan status completed
 
 // TODO: Buat interface untuk To-Do item
-interface TodoItem {
-  id: string;
-  text: string;
-  status: TodoStatus;
-  createdAt: Date;
-  priority?: 'low' | 'medium' | 'high';
+export interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
 }
 
 // TODO: Buat tipe untuk status To-Do (active/done)
-type TodoStatus = 'active' | 'done';
+export type TodoStatus = 'active' | 'done';
 
 // TODO: Buat tipe untuk fungsi-fungsi yang akan digunakan
-type TodoAction = (id: string) => void;
-type AddTodoAction = (text: string) => void;
-type SearchTodoAction = (query: string) => void;
+export type AddTodoFn = (text: string) => void;
+export type CompleteTodoFn = (id: number) => void;
+export type DeleteTodoFn = (id: number) => boolean;
+export type ListTodoFn = () => void;
+export type GetAllTodosFn = () => TodoList[];
+export type SearchTodoFn = (query: string) => TodoList;
+
+// Type Alias: Array of Todo
+export type TodoList = Todo[];
