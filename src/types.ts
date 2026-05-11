@@ -4,7 +4,7 @@
 // TODO: Buat interface untuk To-Do item
 export interface Todo {
   id: number;
-  title: string;
+  text: string;
   completed: boolean;
 }
 
