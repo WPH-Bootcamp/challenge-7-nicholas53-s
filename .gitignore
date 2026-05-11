@@ -1,5 +1,3 @@
 node_modules/
 dist/
-*.log
-data/
-.DS_Store
+package-lock.json
