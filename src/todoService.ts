@@ -68,7 +68,7 @@ export function listTodos(): void {
   const todos: TodoList = readTodos();
 
   if (todos.length === 0) {
-    console.log(`bellum ada Todo, tambahkan todo pertama!`);
+    console.log(`Belum ada list, tambahkan task pertama!`);
     return;
   }
 
@@ -78,7 +78,7 @@ export function listTodos(): void {
     const num = String(index + 1).padStart(2, '0');
     const status = todo.completed ? '[--DONE--]' : '[-ACTIVE-]';
 
-    console.log(`${status} ${num}. ${todo.text}`);
+    console.log(`${status} ${num}. ${todo.text} (ID: ${todo.id})`);
   });
 
   console.log('————————————————————————————————————————————————————\n');
