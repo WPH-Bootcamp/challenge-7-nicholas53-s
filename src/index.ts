@@ -30,7 +30,6 @@ import {
   searchTodos,
 } from './todoService';
 import { isTodo, validStringInput } from './utils';
-import { pipeline } from 'stream';
 
 // Set Up Readline Interface
 const rl = readline.createInterface({
