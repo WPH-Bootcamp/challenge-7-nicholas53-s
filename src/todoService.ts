@@ -1,24 +1,99 @@
-// TODO: Import tipe-tipe yang sudah didefinisikan di types.ts
+import { Todo, TodoList } from './types';
+import { readTodos, writeTodos } from './storage';
+import { generateId, validStringInput } from './utils';
 
-// TODO: Import fungsi storage untuk baca/tulis file
+//Add TODO
+export function addTodo(text: string): Todo {
+  const validText = validStringInput(text, 'Todo Text');
 
-// TODO: Buat fungsi untuk menambahkan To-Do baru
-// - Generate id yang unik (bisa pakai timestamp atau counter)
-// - Pastikan text tidak kosong
-// - Set default status sebagai active
+  const todos = readTodos();
 
-// TODO: Buat fungsi untuk menandai To-Do sebagai selesai
-// - Cari To-Do berdasarkan id
-// - Ubah statusnya menjadi completed
-// - Handle kasus jika id tidak ditemukan
+  const newTodo: Todo = {
+    id: generateId(todos),
+    text: validText,
+    completed: false,
+  };
 
-// TODO: Buat fungsi untuk menghapus To-Do
-// - Filter To-Do berdasarkan id
-// - Handle kasus jika id tidak ditemukan
+  todos.push(newTodo);
+  const saved = writeTodos(todos);
+  if (!saved) {
+    throw new Error('Gagal menyimpan data, coba lagi');
+  }
 
-// TODO: Buat fungsi untuk menampilkan semua To-Do
-// - Tampilkan dengan format yang rapi
-// - Tambahkan status [ACTIVE] atau [DONE] di depan setiap To-Do
-// - Berikan nomor urut untuk memudahkan user memilih
+  return newTodo;
+}
 
-// TODO: Buat fungsi untuk mencari To-Do berdasarkan keyword
+// Complete TODO
+export function completeTodo(id: number): Todo {
+  const todos = readTodos();
+
+  const todo = todos.find((t) => t.id === id);
+  if (!todo) {
+    throw new Error(`todo dengan id ${id} tidak ditemukan`);
+  }
+
+  if (todo.completed) {
+    throw new Error(`Todo "${todo.text}" sudah ditandai sebagai selesai`);
+  }
+
+  todo.completed = true;
+
+  const saved = writeTodos(todos);
+  if (!saved) {
+    throw new Error('Gagal menyimpan data, coba lagi');
+  }
+
+  return todo;
+}
+
+// Delete TODO
+export function deleteTodo(id: number): boolean {
+  const todos: TodoList = readTodos();
+  const initialLength = todos.length;
+
+  const filtered = todos.filter((t) => t.id !== id);
+
+  if (filtered.length === initialLength) {
+    throw new Error(`Todo dengan id ${id} tidak ditemukan`);
+  }
+  const saved = writeTodos(filtered);
+  if (!saved) {
+    throw new Error('Gagal menyimpan data, coba lagi');
+  }
+  return true;
+}
+
+// List Todos
+export function listTodos(): void {
+  const todos: TodoList = readTodos();
+
+  if (todos.length === 0) {
+    console.log(`Belum ada list, tambahkan task pertama!`);
+    return;
+  }
+
+  console.log('\n————————————————————————————————————————————————————');
+
+  todos.forEach((todo, index) => {
+    const num = String(index + 1).padStart(2, '0');
+    const status = todo.completed ? '[--DONE--]' : '[-ACTIVE-]';
+
+    console.log(`${status} ${num}. ${todo.text} (ID: ${todo.id})`);
+  });
+
+  console.log('————————————————————————————————————————————————————\n');
+}
+
+//Search TODO
+
+export function searchTodos(keyword: string): TodoList {
+  const validKeyword = validStringInput(keyword, 'Keyword Pencarian');
+  const todos: TodoList = readTodos();
+
+  const lowerKeyword = validKeyword.toLowerCase();
+  return todos.filter((todo) => todo.text.toLowerCase().includes(lowerKeyword));
+}
+
+export function getAllTodos(): TodoList {
+  return readTodos();
+}
